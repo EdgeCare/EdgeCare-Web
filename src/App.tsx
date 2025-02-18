@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import { Box } from '@mui/material';
+import axios from 'axios';
+import InputPanel from './components/InputPanel';
+import OutputPanel from './components/OutputPanel';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+// Interface for prediction results
+interface Token {
+    token: string;
+    tag: string;
 }
 
-export default App
+function App() {
+    const [inputText, setInputText] = useState('');
+    const [output, setOutput] = useState<Token[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    // Handle text input changes
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setInputText(e.target.value);
+    };
+
+    // Submit text to the server for inference
+    const handleSubmit = async () => {
+        if (!inputText) return;
+
+        setLoading(true);
+        
+        try {
+            const response = await axios.post('http://localhost:8000/predict', { text: inputText });
+            setOutput(response.data.results);
+        } catch (error) {
+            console.error('Error during prediction:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Box
+        sx={{
+            height: '100vh',
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+            gridTemplateRows: '1fr',
+            gap: 2,
+        }}
+        >
+            {/* Input Component */}
+            <InputPanel
+                inputText={inputText}
+                loading={loading}
+                onInputChange={handleInputChange}
+                onSubmit={handleSubmit}
+            />
+
+            {/* Output Component */}
+            <OutputPanel output={output} />
+        </Box>
+    );
+}
+
+export default App;
