@@ -40,7 +40,7 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ output }) => {
     return (
         <Box sx={{ p: 2, backgroundColor: '#f9fafc' }}>
             <Typography variant="h5" sx={{ mb: 2 }}>
-                🏷️ Labeled De-Identified Medical Note
+                🏷️ Anonymized Medical Note
             </Typography>
             <Box
                 sx={{
