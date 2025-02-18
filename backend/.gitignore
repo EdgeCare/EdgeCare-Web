@@ -1,0 +1,4 @@
+.venv
+model/edgeCare-de-identifier.onnx
+model/vocab.txt
+**/__pycache__/**
