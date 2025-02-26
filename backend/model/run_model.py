@@ -22,6 +22,7 @@ onnx_model_path = "./model/edgeCare-de-identifier.onnx"  # Ensure this path is c
 session = ort.InferenceSession(onnx_model_path)
 
 def format_output(tokens, predicted_labels, text):
+    ## TODO: Update this function later for better fromatting
 
     # Removing special tokens
     token_label_pairs = []
@@ -31,19 +32,35 @@ def format_output(tokens, predicted_labels, text):
 
     formatted_results = []
     current_entity = {"token": "", "tag": "O"}
+    text_index = 0
+    lower_text = text.lower()
     for i, (token, tag) in enumerate(token_label_pairs):
         word = token.replace("##", "")  # Merge subword tokens
         if i > 0 and token.startswith("##"):  
             current_entity["token"] += word
         elif tag == current_entity["tag"]:
-            current_entity["token"] += " " + word
+            if current_entity["token"]+" " + word in lower_text:
+                current_entity["token"] += " " + word
+            elif current_entity["token"]+ word in lower_text:
+                current_entity["token"] += word
+            else:
+                current_entity["token"] += " " + word
+
         else:
             if current_entity["token"]:
                 formatted_results.append(current_entity)
             current_entity = {"token": word, "tag": tag}
+        
+        text_index = lower_text.find(word, text_index)+len(word)
+        if text_index+1 < len(lower_text):
+            if lower_text[text_index+1] == "\n":
+                if current_entity["token"]:
+                    formatted_results.append(current_entity)
+                formatted_results.append({"token": "\n", "tag": 'O'})
+                current_entity = {"token": "", "tag": 'O'}
 
         ## [TODO] - Handle new line characters
-        #check if present in test and then add {"token": ''\n', "tag": 0}
+        # check if present in test and then add {"token": ''\n', "tag": 0}
 
 
     if current_entity["token"]:
@@ -55,7 +72,6 @@ def format_output(tokens, predicted_labels, text):
         match = re.search(re.escape(entity["token"]), formatted_text, re.IGNORECASE)
         if match:
             entity["token"] = formatted_text[match.start(): match.end()]
-    
 
     return formatted_results
 
@@ -88,9 +104,5 @@ async def predict_entities(text: str):
 
     # Format outpu
     formatted_results = format_output(tokens, predicted_labels, text)
-    print("text",text)
-    print("tokens",tokens)
-    print("predicted_labels",predicted_labels)
-    print("formatted_results",formatted_results)
     
     return formatted_results
