@@ -27,7 +27,7 @@ function App() {
         setLoading(true);
         
         try {
-            const response = await axios.post('http://localhost:8000/predict', { text: inputText });
+            const response = await axios.post('http://localhost:8000/edgecare/predict', { text: inputText });
             setOutput(response.data.results);
         } catch (error) {
             console.error('Error during prediction:', error);
