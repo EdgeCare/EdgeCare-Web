@@ -102,7 +102,8 @@ async def predict_entities(text: str):
     tokens = tokenizer.convert_ids_to_tokens(inputs["input_ids"][0])
     predicted_labels = [ids_to_labels[pred.item()] for pred in predictions[0]]
 
-    # Format outpu
+    # Format output
     formatted_results = format_output(tokens, predicted_labels, text)
+    # print(tokens, predicted_labels)
     
     return formatted_results
