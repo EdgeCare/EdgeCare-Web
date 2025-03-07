@@ -18,7 +18,9 @@ tokenizer = MobileBertTokenizer.from_pretrained(model_name)
 ids_to_labels = load_labels()
 
 # Load ONNX Model
-onnx_model_path = "./model/edgeCare-de-identifier.onnx"  # Ensure this path is correct
+onnx_model_path = "./model/edgeCare-de-identifier-fp16.onnx"
+# onnx_model_path = "./model/edgeCare-de-identifier-32.onnx"
+
 session = ort.InferenceSession(onnx_model_path)
 
 def format_output(tokens, predicted_labels, text):

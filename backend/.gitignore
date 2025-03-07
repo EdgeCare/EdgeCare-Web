@@ -1,4 +1,5 @@
 .venv
-model/edgeCare-de-identifier.onnx
+model/edgeCare-de-identifier-fp16.onnx
+model/edgeCare-de-identifier-fp32.onnx
 model/vocab.txt
 **/__pycache__/**
