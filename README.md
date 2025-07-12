@@ -1,6 +1,6 @@
 # EdgeCare masking NER Model Web Demo
 
-This repository contains a web demo for our fine-tuned model. The demo allows users to interact with the model through a web interface.
+This repository contains a web demo for our fine-tuned model for PHI(Protected Health Information) masking. The demo allows users to interact with the model through a web interface & see how the model works.
 
 ## 🔗 Live Demo
 Check out the live demo here: [NER Web Demo](https://edgecare-web.web.app)
@@ -39,6 +39,7 @@ npm run dev
 
 ## 💡 Contributing
 We welcome contributions! Feel free to open an issue or submit a pull request.
+Or contact us via email.
 
 ---
 
